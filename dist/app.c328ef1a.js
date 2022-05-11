@@ -125,8 +125,20 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.upload = upload;
 
+function bytesToSize(bytes) {
+  var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+
+  if (!bytes) {
+    return '0 Byte';
+  }
+
+  var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+  return Math.round(bytes / Math.pow(1024, i), i) + ' ' + sizes[i];
+}
+
 function upload(selector) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var files = [];
   var input = document.querySelector(selector);
   var preview = document.createElement('div');
   preview.classList.add('preview');
@@ -154,7 +166,7 @@ function upload(selector) {
       return;
     }
 
-    var files = Array.from(event.target.files);
+    files = Array.from(event.target.files);
     preview.innerHTML = '';
     files.forEach(function (file) {
       if (!file.type.match('image')) {
@@ -165,15 +177,29 @@ function upload(selector) {
 
       reader.onload = function (ev) {
         var src = ev.target.result;
-        preview.insertAdjacentHTML('afterbegin', "\n            <div class=\"preview__img\">\n                <div class=\"preview__remove\">&times;</div>\n                <img src=\"".concat(src, "\" alt=\"").concat(file.name, "\" />\n                <div class=\"preview__info\">\n                <span>").concat(file.name, "</span>\n                ").concat(file.size, "\n                </div>\n            </div>\n                "));
+        preview.insertAdjacentHTML('afterbegin', "\n            <div class=\"preview__img\">\n              <div class=\"preview__remove\" data-name=\"".concat(file.name, "\">&times;</div>\n                <img src=\"").concat(src, "\" alt=\"").concat(file.name, "\" />\n                <div class=\"preview__info\">\n                <span>").concat(file.name, "</span>\n                ").concat(bytesToSize(file.size), "\n              </div>\n            </div>\n            "));
       };
 
       reader.readAsDataURL(file);
     });
   };
 
+  var removeHeandler = function removeHeandler(event) {
+    if (!event.target.dataset.name) {
+      return;
+    }
+
+    var name = event.target.dataset.name;
+    files = files.filter(function (file) {
+      return file.name !== name;
+    });
+    var block = preview.querySelector("[data-name=\"".concat(name, "\"]")).closest('.preview__img');
+    block.remove();
+  };
+
   open.addEventListener('click', triggerInput);
   input.addEventListener('change', changeHeandler);
+  preview.addEventListener('click', removeHeandler);
 }
 },{}],"app.js":[function(require,module,exports) {
 "use strict";

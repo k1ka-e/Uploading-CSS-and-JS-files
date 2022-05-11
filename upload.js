@@ -1,4 +1,15 @@
+function bytesToSize(bytes) {
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+    if (!bytes) {
+       return '0 Byte' 
+    } 
+    const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
+    return Math.round(bytes / Math.pow(1024, i), i) + ' ' + sizes[i]
+}
+
+
 export function upload(selector, options = {}) {
+    let files = []
     const input = document.querySelector(selector)
     const preview = document.createElement('div')
 
@@ -26,7 +37,7 @@ export function upload(selector, options = {}) {
             return
         }
 
-        const files = Array.from(event.target.files)
+        files = Array.from(event.target.files)
 
         preview.innerHTML = ''
         files.forEach(file => {
@@ -40,20 +51,38 @@ export function upload(selector, options = {}) {
                 const src = ev.target.result
                 preview.insertAdjacentHTML('afterbegin', `
             <div class="preview__img">
-                <div class="preview__remove">&times;</div>
+              <div class="preview__remove" data-name="${file.name}">&times;</div>
                 <img src="${src}" alt="${file.name}" />
                 <div class="preview__info">
                 <span>${file.name}</span>
-                ${file.size}
-                </div>
+                ${bytesToSize(file.size)}
+              </div>
             </div>
-                `)
+            `)
+
             }
 
             reader.readAsDataURL(file)
         });
     }
 
+    const removeHeandler = event => {
+        if(!event.target.dataset.name) {
+            return
+        }
+
+        const {name} = event.target.dataset
+        files = files.filter(file => file.name !== name)
+
+        const block = preview
+        .querySelector(`[data-name="${name}"]`)
+        .closest('.preview__img')
+
+        block.remove()
+    }
+
+
     open.addEventListener('click', triggerInput)
     input.addEventListener('change', changeHeandler)
+    preview.addEventListener('click', removeHeandler)
 }
