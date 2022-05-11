@@ -22,9 +22,11 @@ const element = (tag,classes = [], content) => {
     
 }
 
+const noop = function () {}
 
 export function upload(selector, options = {}) {
     let files = []
+    const onUpload = options.onUpload ?? noop
     const input = document.querySelector(selector)
     const preview = element('div', ['preview'])
     const open = element('button', ['btn'], 'Открыть')
@@ -102,8 +104,17 @@ export function upload(selector, options = {}) {
         setTimeout( () => block.remove(), 300)
     }
 
-    const uploadHeandler = () => {
+    const clearPreview = el => {
+        el.style.bottom = '4px'
+        el.innerHTML = '<div class="preview__info__progress"</div>'
+    }
 
+    const uploadHeandler = () => {
+        preview.querySelectorAll('.preview__remove').forEach(
+            e => e.remove())
+            const previewInfo = preview.querySelectorAll('.preview__info')
+            previewInfo.forEach(clearPreview)
+            onUpload(files)
     }
 
 

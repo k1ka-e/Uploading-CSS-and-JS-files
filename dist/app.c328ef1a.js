@@ -166,9 +166,14 @@ var element = function element(tag) {
   return node;
 };
 
+var noop = function noop() {};
+
 function upload(selector) {
+  var _options$onUpload;
+
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var files = [];
+  var onUpload = (_options$onUpload = options.onUpload) !== null && _options$onUpload !== void 0 ? _options$onUpload : noop;
   var input = document.querySelector(selector);
   var preview = element('div', ['preview']);
   var open = element('button', ['btn'], 'Открыть');
@@ -236,7 +241,19 @@ function upload(selector) {
     }, 300);
   };
 
-  var uploadHeandler = function uploadHeandler() {};
+  var clearPreview = function clearPreview(el) {
+    el.style.bottom = '4px';
+    el.innerHTML = '<div class="preview__info__progress"</div>';
+  };
+
+  var uploadHeandler = function uploadHeandler() {
+    preview.querySelectorAll('.preview__remove').forEach(function (e) {
+      return e.remove();
+    });
+    var previewInfo = preview.querySelectorAll('.preview__info');
+    previewInfo.forEach(clearPreview);
+    onUpload(files);
+  };
 
   open.addEventListener('click', triggerInput);
   input.addEventListener('change', changeHeandler);
@@ -250,7 +267,8 @@ var _upload = require("./upload.js");
 
 (0, _upload.upload)('#file', {
   multi: true,
-  accept: ['.png', '.jpg', '.jpeg', '.gif']
+  accept: ['.png', '.jpg', '.jpeg', '.gif'],
+  onUpload: function onUpload(files) {}
 });
 },{"./upload.js":"upload.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -280,7 +298,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54790" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56021" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
