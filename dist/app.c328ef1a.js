@@ -151,7 +151,18 @@ function upload(selector) {
       return;
     }
 
-    var files = event.target.files;
+    var files = Array.from(event.target.files);
+    files.array.forEach(function (file) {
+      if (file.type.match('image')) {
+        return;
+      }
+
+      var reader = new FileReader();
+
+      reader.onload = function (ev) {};
+
+      reader.readAsDataURL(file);
+    });
   };
 
   open.addEventListener('click', triggerInput);

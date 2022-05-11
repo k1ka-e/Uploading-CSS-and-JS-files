@@ -22,9 +22,21 @@ export function upload(selector, options = {}) {
             return
         }
 
-        const {files} = event.target
+        const files = Array.from(event.target.files)
 
-        
+        files.array.forEach(file => {
+            if (file.type.match( 'image')) {
+                return
+            }
+
+            const reader = new FileReader()
+
+            reader.onload = ev => {
+                
+            }
+
+            reader.readAsDataURL(file)
+        });
     }
 
     open.addEventListener('click', triggerInput)
