@@ -23,6 +23,7 @@ body {
     color: #42b983;
     position: relative;
     border-radius: 99px;
+    border-color: #42b983;
     text-decoration: none;
     text-transform: uppercase;
     padding: 0.5rem 1.5rem;
@@ -46,6 +47,10 @@ body {
 .btn:hover {
     cursor: pointer;
     opacity: 0.8;
+}
+
+input[type=file] {
+    display: none;
 }
     
 

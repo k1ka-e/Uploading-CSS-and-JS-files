@@ -118,11 +118,54 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"upload.js":[function(require,module,exports) {
+"use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.upload = upload;
+
+function upload(selector) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var input = document.querySelector(selector);
+  var open = document.createElement('button');
+  open.classList.add('btn');
+  open.textContent = 'Открыть';
+
+  if (options.multi) {
+    input.setAttribute('multiple', true);
+  }
+
+  if (options.accept && Array.isArray(options.accept)) {
+    input.setAttribute('accept', options.accept.join(','));
+  }
+
+  input.insertAdjacentElement('afterend', open);
+
+  var triggerInput = function triggerInput() {
+    return input.click();
+  };
+
+  var changeHeandler = function changeHeandler(event) {
+    if (!event.target.files.length) {
+      return;
+    }
+
+    var files = event.target.files;
+  };
+
+  open.addEventListener('click', triggerInput);
+  input.addEventListener('change', changeHeandler);
+}
 },{}],"app.js":[function(require,module,exports) {
 "use strict";
 
-require("./upload.js");
+var _upload = require("./upload.js");
+
+(0, _upload.upload)('#file', {
+  multi: true,
+  accept: ['.png', '.jpg', '.jpeg', '.gif']
+});
 },{"./upload.js":"upload.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
