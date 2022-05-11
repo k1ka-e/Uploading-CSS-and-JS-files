@@ -63,6 +63,7 @@ input[type=file] {
     position: relative;
     margin-bottom: .5rem;
     margin-right: .5rem;
+    overflow: hidden;
 }
 
 .preview__img img {
@@ -72,6 +73,10 @@ input[type=file] {
 
 .preview__img:hover .preview__remove{
     opacity: 1;
+}
+
+.preview__img:hover .preview__info{
+    bottom: 4px;
 }
     
 .preview__remove {
@@ -88,6 +93,21 @@ input[type=file] {
     justify-content: center;
     cursor: pointer;
     transition: opacity .22s;
+}
+
+.preview__info {
+    position: absolute;
+    right: 0;
+    bottom: -30px;
+    left: 0;
+    height: 24px;
+    font-size: .8rem;
+    background: rgba(255, 255, 255, .5);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5px;
+    transition: bottom .22s;
 }
 
 /*# sourceMappingURL=/theme.f91554c8.css.map */
