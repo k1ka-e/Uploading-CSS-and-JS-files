@@ -128,6 +128,8 @@ exports.upload = upload;
 function upload(selector) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var input = document.querySelector(selector);
+  var preview = document.createElement('div');
+  preview.classList.add('preview');
   var open = document.createElement('button');
   open.classList.add('btn');
   open.textContent = 'Открыть';
@@ -140,6 +142,7 @@ function upload(selector) {
     input.setAttribute('accept', options.accept.join(','));
   }
 
+  input.insertAdjacentElement('afterend', preview);
   input.insertAdjacentElement('afterend', open);
 
   var triggerInput = function triggerInput() {
@@ -152,14 +155,18 @@ function upload(selector) {
     }
 
     var files = Array.from(event.target.files);
-    files.array.forEach(function (file) {
-      if (file.type.match('image')) {
+    preview.innerHTML = '';
+    files.forEach(function (file) {
+      if (!file.type.match('image')) {
         return;
       }
 
       var reader = new FileReader();
 
-      reader.onload = function (ev) {};
+      reader.onload = function (ev) {
+        var src = ev.target.result;
+        preview.insertAdjacentHTML('afterbegin', "\n            <div class=\"preview__img\">\n                <div class=\"preview__remove\">&times;</div>\n                <img src=\"".concat(src, "\" alt=\"").concat(file.name, "\" />\n                <div class=\"preview__info\">\n\n                </div>\n            </div>\n                "));
+      };
 
       reader.readAsDataURL(file);
     });

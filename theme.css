@@ -52,4 +52,40 @@ body {
 input[type=file] {
     display: none;
 }
+
+.preview {
+    display: flex;
+    flex-wrap: wrap;
+    padding: .5rem;
+}
+
+.preview__img {
+    position: relative;
+    margin-bottom: .5rem;
+    margin-right: .5rem;
+}
+
+.preview__img img {
+    width: 180px;
+    height: auto;
+}
+
+.preview__img:hover .preview__remove{
+    opacity: 1;
+}
     
+.preview__remove {
+    opacity: 0;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-weight: bold;
+    background: rgba(255, 255, 255, .5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity .22s;
+}
