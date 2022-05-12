@@ -117,6 +117,7 @@ export function upload(selector, options = {}) {
             onUpload(files)
     }
 
+    
 
     open.addEventListener('click', triggerInput)
     input.addEventListener('change', changeHeandler)
