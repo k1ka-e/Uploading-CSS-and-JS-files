@@ -114,7 +114,7 @@ export function upload(selector, options = {}) {
             e => e.remove())
             const previewInfo = preview.querySelectorAll('.preview__info')
             previewInfo.forEach(clearPreview)
-            onUpload(files)
+            onUpload(files, previewInfo)
     }
 
     

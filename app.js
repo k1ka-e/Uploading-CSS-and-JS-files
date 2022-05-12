@@ -21,19 +21,23 @@ upload( '#file', {
     multi: true,
     accept: ['.png', '.jpg', '.jpeg', '.gif'],
 
-    onUpload(files) {
-        files.forEach(file => {
+    onUpload(files, blocks) {
+        files.forEach((file, index) => {
            const ref = storage.ref(`images/${file.name}`)
            const task = ref.put(file)
 
            task.on('statee__changed', snapshot => {
-               const percentage = (snapshot.bytesTransferred / 
-               snapshot.totalBytes) * 100
-               console.log(percentage)
-           }, error => {
+               const percentage = ((snapshot.bytesTransferred / 
+               snapshot.totalBytes) * 100).toFixed(0) + '%'
+               const block = blocks[index].querySelector('.preview__info__progress')
+               block.textContent = percentage
+               block.style.width = percentage
+            }, error => {
                console.log(error)
            }, () => {
-               console.log('Complate')
+               task.snapshot.ref.getDownloadURL().then(url => {
+                   console.log('Download URL', url)
+               })
            })
         });
     }

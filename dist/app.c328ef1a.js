@@ -9852,7 +9852,7 @@ function upload(selector) {
     });
     var previewInfo = preview.querySelectorAll('.preview__info');
     previewInfo.forEach(clearPreview);
-    onUpload(files);
+    onUpload(files, previewInfo);
   };
 
   open.addEventListener('click', triggerInput);
@@ -9887,17 +9887,21 @@ var storage = _app.default.storage();
 (0, _upload.upload)('#file', {
   multi: true,
   accept: ['.png', '.jpg', '.jpeg', '.gif'],
-  onUpload: function onUpload(files) {
-    files.forEach(function (file) {
+  onUpload: function onUpload(files, blocks) {
+    files.forEach(function (file, index) {
       var ref = storage.ref("images/".concat(file.name));
       var task = ref.put(file);
       task.on('statee__changed', function (snapshot) {
-        var percentage = snapshot.bytesTransferred / snapshot.totalBytes * 100;
-        console.log(percentage);
+        var percentage = (snapshot.bytesTransferred / snapshot.totalBytes * 100).toFixed(0) + '%';
+        var block = blocks[index].querySelector('.preview__info__progress');
+        block.textContent = percentage;
+        block.style.width = percentage;
       }, function (error) {
         console.log(error);
       }, function () {
-        console.log('Complate');
+        task.snapshot.ref.getDownloadURL().then(function (url) {
+          console.log('Download URL', url);
+        });
       });
     });
   }
